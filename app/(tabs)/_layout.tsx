@@ -16,6 +16,20 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const headerRight = () => (
+    <Link href="/addTask" asChild>
+      <Pressable>
+        {({ pressed }) => (
+          <FontAwesome
+            name="plus"
+            size={25}
+            color={Colors[colorScheme ?? 'light'].text}
+            style={{ marginRight: 20, opacity: pressed ? 0.5 : 1 }}
+          />
+        )}
+      </Pressable>
+    </Link>
+  )
 
   return (
     <Tabs
@@ -25,29 +39,25 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
+          title: 'today',
+          tabBarIcon: ({ color }) => <TabBarIcon name='home' color={color} />,
+          headerRight,
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="week"
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Weekly',
+          tabBarIcon: ({ color }) => <TabBarIcon name="table" color={color} />,
+          headerRight,
+        }}
+      />
+      <Tabs.Screen
+        name="month"
+        options={{
+          title: 'Monthly',
+          tabBarIcon: ({ color }) => <TabBarIcon name="calendar" color={color} />,
+          headerRight,
         }}
       />
     </Tabs>
