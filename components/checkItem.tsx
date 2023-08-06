@@ -1,16 +1,32 @@
+import { FontAwesome } from '@expo/vector-icons'
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 
 interface Props {
   name: string
-  id: number
+  isComplete: boolean
+  completTask: (value: string) => void
 }
 
-const CheckItem = ({ id, name }: Props) => {
+const CheckItem = ({ name, isComplete, completTask }: Props) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{name}</Text>
-      <Text style={styles.id}>Nº {id}</Text>
+      <TouchableOpacity onPress={() => { completTask(name) }}>
+        <View style={styles.checkBoxContainer}>
+          <FontAwesome 
+            name={isComplete ?  'check-square' : 'square-o'} 
+            color={isComplete ? 'green' : 'white'}
+            size={23} 
+          />
+          <Text style={styles.title}>{name}</Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity >
+        <View style={styles.tashContainer}>
+          {!isComplete && 
+            (<FontAwesome name='trash-o' color='white' size={20}/>)}
+        </View>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -22,7 +38,17 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'space-between',
     flexDirection: 'row',
-    padding: 15,
+  },
+  checkBoxContainer: {
+    flexDirection: 'row',
+    gap: 10,
+    alignContent: 'center',
+    width: 300,
+    paddingVertical: 10
+  },
+  tashContainer: {
+    width: 30,
+    paddingVertical: 10
   },
   title: {
     fontSize: 17,

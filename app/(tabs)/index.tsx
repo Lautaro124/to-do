@@ -1,29 +1,12 @@
 import { StyleSheet } from 'react-native';
-import { useEffect, useState } from 'react';
 
 import { Text, View } from '@/components/Themed';
 import CheckItem from '@/components/checkItem';
+import useTask from '@/hooks/task';
 import Times from '@/constants/time';
-import { getData } from '@/config/storages';
-import { Task } from '@/interfaces/task';
 
 export default function TabOneScreen() {
-  const [tasks, setTask] = useState<Task[]>([])
-  const getTasks = async () => {
-    const data = await getData(Times.today)
-    if (!data) return []
-    const parsedData: Task[] = JSON.parse(data)
-    console.log(parsedData)
-    return parsedData
-  }
-  useEffect(() => {
-    getTasks().then((data) => {
-      return setTask(data);
-    })
-      .catch((err) => {
-        console.log(err)
-      })
-  }, [])
+  const { completeTask, getNotCompletedTask, getOnlyCompletedTask } = useTask(Times.today)
 
   return (
     <View style={styles.container}>
@@ -31,21 +14,28 @@ export default function TabOneScreen() {
         <Text style={styles.title}>To do now</Text>
         <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
         <View style={styles.listContainer}>
-          {
-            tasks.map((task, index) => (
-              <CheckItem name={task.name ?? ''} id={index + 1} />
-            ))
-          }
+          {getNotCompletedTask().map((task, index) => (
+              <CheckItem
+                key={index}
+                name={task.name ?? ''}
+                isComplete={task.isCompleted}
+                completTask={completeTask}
+              />
+            ))}
         </View>
       </View>
       <View style={styles.sectionContainer}>
         <Text style={styles.title}>Completed</Text>
         <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
         <View style={styles.listContainer}>
-          <CheckItem name="test" id={1} />
-          <CheckItem name="test" id={2} />
-          <CheckItem name="test" id={3} />
-          <CheckItem name="test" id={4} />
+          {getOnlyCompletedTask().map((task, index) => (
+            <CheckItem
+              key={index}
+              name={task.name ?? ''}
+              isComplete={task.isCompleted}
+              completTask={completeTask}
+            />
+          ))}
         </View>
       </View>
     </View>
@@ -70,6 +60,8 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#333',
     borderRadius: 5,
+    padding: 10,
+    paddingHorizontal: 15
   },
   title: {
     fontSize: 20,

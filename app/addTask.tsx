@@ -7,10 +7,12 @@ import { View } from '@/components/Themed';
 import { saveData, getData } from '@/config/storages';
 import Times from '@/constants/time';
 import { FontAwesome } from '@expo/vector-icons';
+import useTask from '@/hooks/task';
 
 export default function ModalScreen() {
   const [taskName, setTaskName] = useState<string>('')
   const [selectedItem, setSelectedItem] = useState<string>('');
+  const { addTask } = useTask(Times.today)
   const items: string[] = [
     Times.today,
     Times.weekly,
@@ -29,6 +31,7 @@ export default function ModalScreen() {
       })
       const taskTojson = JSON.stringify(newTasks)
       saveData(selectedItem, taskTojson)
+      addTask(taskName)
     }
   }
 
